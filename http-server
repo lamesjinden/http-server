@@ -1,0 +1,25 @@
+#!/usr/bin/env bb
+
+(require '[babashka.deps :as deps])
+(deps/add-deps
+ '{:deps {org.babashka/http-server {:mvn/version "0.1.13"}}})
+
+(require '[babashka.http-server :as http-server])
+
+(defn display-help []
+  (println "HTTP Server Options:")
+  (println "'--port'  - specifies the port the HTTP server will serve on")
+  (println "'--dir'   - specifies the directory that will by served by the HTTP server")
+  (println "'--headers' - a Clojure map literal (enclosed with single-quotes) that specifies additional response headers from the HTTP Server"))
+
+(def default-port ["--port" "8000"])
+
+(cond
+  (some (fn [x] (contains? #{"-h" "--help"} x)) *command-line-args*)
+  (display-help)
+
+  (some (fn [x] (= "--port")) *command-line-args*)
+  (apply http-server/-main *command-line-args*)
+
+  :else
+  (apply http-server/-main (concat *command-line-args* default-port)))
