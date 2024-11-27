@@ -18,7 +18,7 @@
   (some (fn [x] (contains? #{"-h" "--help"} x)) *command-line-args*)
   (display-help)
 
-  (some (fn [x] (= "--port")) *command-line-args*)
+  (some (fn [x] (= x "--port")) *command-line-args*)
   (apply http-server/-main *command-line-args*)
 
   :else
